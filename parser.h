@@ -25,7 +25,10 @@ typedef struct inputStruct {
 
     FILE* archive;
     
+    /* FILE* type */
     LIST* files;
+    
+    /* DIR* type */
     LIST* directories;
     
     uint16_t flags;
