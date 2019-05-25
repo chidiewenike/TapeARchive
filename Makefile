@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -Wall -ansi -pedantic
 MAIN = mytar
-OBJS = mytar.o parser.o list.o
+OBJS = mytar.o parser.o list.o writemytar.o
 all : $(MAIN)
 
 $(MAIN) : $(OBJS)
@@ -16,5 +16,8 @@ parser.o : parser.c parser.h
 list.o : list.c list.h
 	$(CC) $(CFLAGS) -c list.c
 
+writemytar.o : writemytar.c writemytar.h
+    $(CC) $(CFLAGS) -c writemytar.c
+
 clean :
-	rm *.o $(MAIN)
+	rm *.o *.tar test/*.tar $(MAIN)
