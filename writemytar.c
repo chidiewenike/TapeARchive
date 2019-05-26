@@ -5,7 +5,8 @@
 void write_tar(struct stat *root_stat, int tar_fd, char *root_path)
 {
     struct dirent *directory = (struct dirent*)malloc(sizeof(struct dirent));
-    struct tar_header *root_header = (struct tar_header*)malloc(sizeof(struct tar_header));
+    struct tar_header *root_header = 
+        (struct tar_header*)malloc(sizeof(struct tar_header));
 
     root_header = create_header(root_path);
 
@@ -31,7 +32,8 @@ void print_header(struct tar_header *header)
 
 struct tar_header* create_header(char *path)
 {
-    struct tar_header *header = (struct tar_header*)malloc(sizeof(struct tar_header));
+    struct tar_header *header = 
+        (struct tar_header*)malloc(sizeof(struct tar_header));
     struct stat *head_stat = (struct stat*)malloc(sizeof(struct stat));    
     struct group *head_grp = (struct group*)malloc(sizeof(struct group));
     struct passwd *head_pwd = (struct passwd*)malloc(sizeof(struct passwd));
@@ -88,22 +90,30 @@ bool not_empty_dir(DIR *dir)
     return false;
 }
 
+/* Look through all of the dirs and write from them */
 void traverse_dirs(struct tar_header *header)
 {
+    /* Running data */
     struct dirent *contents = (struct dirent*)malloc(sizeof(struct dirent));
-    char curr_path [100];
-
+    /* Was at 100, but pretty sure this is defined */
+    char curr_path [PATH_MAX];
+    
+    /* Set header name and open dir */
     strcpy(curr_path, header->name);
-
     printf("\n\ncurr_path: %s\n\n", curr_path);
     DIR *dir = opendir(header->name);
 
+    /* Traverse through sub directories */
     while ((contents = readdir(dir)) != NULL)
     {
-        if((strcmp(contents->d_name,".") != 0) && (strcmp(contents->d_name,"..") != 0))
+        /* No self or reverse link */
+        if((strcmp(contents->d_name,".") != 0) 
+        && (strcmp(contents->d_name,"..") != 0))
         {
-            struct tar_header *new_hdr = (struct tar_header*)malloc(sizeof(struct tar_header));
-            char new_path[100];
+            /* Create the tar header for sub directories */
+            struct tar_header *new_hdr = 
+                (struct tar_header*)malloc(sizeof(struct tar_header));
+            char new_path[PATH_MAX];
 
             strcpy(new_path,curr_path);
             strcat(new_path,"/");
@@ -113,7 +123,8 @@ void traverse_dirs(struct tar_header *header)
             print_header(new_hdr);
             // write_to_file
 
-            if((new_hdr->typeflag == '5') && (not_empty_dir(opendir(new_hdr->name))))
+            if((new_hdr->typeflag == '5') 
+            && (not_empty_dir(opendir(new_hdr->name))))
                 traverse_dirs(new_hdr);
         }
     }
