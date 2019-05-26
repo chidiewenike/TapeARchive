@@ -1,15 +1,23 @@
 CC = gcc
+CFLAGS = -g -Wall -ansi -pedantic
+MAIN = mytar
+OBJS = mytar.o parser.o list.o writemytar.o
+all : $(MAIN)
 
-HEADERS = mytar.h writemytar.h
+$(MAIN) : $(OBJS)
+	$(CC) $(CFLAGS) -o $(MAIN) $(OBJS)
 
-SOURCES = mytar.c writemytar.c
+mytar.o : mytar.c mytar.h
+	$(CC) $(CFLAGS) -c mytar.c
 
-.PHONY: clean
+parser.o : parser.c parser.h
+    $(CC) $(CFLAGS) -c parser.c
 
-mytar : $(SOURCES) $(HEADERS)
+list.o : list.c list.h
+	$(CC) $(CFLAGS) -c list.c
 
-	$(CC) $(CFLAGS) -o mytar $(SOURCES) -lm
+writemytar.o : writemytar.c writemytar.h
+    $(CC) $(CFLAGS) -c writemytar.c
 
-clean:
-
-	rm -f *.o *.tar test/*.tar 
+clean :
+	rm *.o *.tar test/*.tar $(MAIN)

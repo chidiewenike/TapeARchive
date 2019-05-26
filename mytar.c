@@ -1,5 +1,6 @@
 #include "mytar.h"
 #include "writemytar.h"
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,20 @@
 #include <sys/types.h>
 int main(int argc, char* argv[])
 {
+
+    /* Get input state */
+
+    SINPUT* input = paser_parse(argc, argv);
+
+    
+
+    if (!input->valid) {
+
+        fprintf(stderr, "%s\n", input->errMessage);
+
+        exit(EXIT_FAILURE);
+
+    }
     struct stat *root_stat = (struct stat*)malloc(sizeof(struct stat)); 
 
     /* checking for the correct num of args */
