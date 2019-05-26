@@ -6,11 +6,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <dirent.h>
-
+#include <sys/types.h>
 int main(int argc, char* argv[])
 {
-    struct dirent *directory;
-
     struct stat *root_stat = (struct stat*)malloc(sizeof(struct stat)); 
 
     /* checking for the correct num of args */
@@ -27,9 +25,7 @@ int main(int argc, char* argv[])
     stat(argv[3], root_stat);
 
     /* begin creating the tar file */
-    write(root_stat, fd_tar, argv[3]);
-
-
+    write_tar(root_stat, fd_tar, argv[3]);
 
     return 0;
 }
